@@ -1,0 +1,53 @@
+import { v4 as uuidv4 } from "uuid";
+  
+  export const dataUser = [
+    {
+      _id: "63701cc1f03239c72c00017f",
+      name: "Emma Powerful",
+      email: "kranstead0@narod.ru",
+      password: "omMDCh",
+      city: "Nurabelen",
+      state: null,
+      country: "ID",
+      occupation: "Computer Systems Analyst I",
+      phoneNumber: "8346315874",
+      role: "superadmin",
+    },
+    {
+      _id: "63701cc1f03239c72c000180",
+      name: "Marilyn",
+      email: "mdonlon1@hostgator.com",
+      password: "XRYBnKAfm",
+      city: "Zhanghekou",
+      state: null,
+      country: "CN",
+      occupation: "Food Chemist",
+      phoneNumber: "9981906117",
+      role: "user",
+    },
+    {
+      _id: "63701cc1f03239c72c000181",
+      name: "Olly",
+      email: "oveneur2@marketwatch.com",
+      password: "WwDjOlH",
+      city: "Muang Sam Sip",
+      state: null,
+      country: "TH",
+      occupation: "Staff Scientist",
+      phoneNumber: "3868813669",
+      role: "admin",
+    },
+    {
+      _id: "63701cc1f03239b7f700000d",
+      name: "Sosanna",
+      email: "smaskew11@cloudflare.com",
+      password: "JwJ8KAu",
+      city: "Gulong",
+      state: null,
+      country: "CN",
+      occupation: "Occupational Therapist",
+      phoneNumber: "1837060566",
+      role: "user",
+    },
+  ];
+
