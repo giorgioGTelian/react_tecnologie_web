@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import {
     Menu as MenuIcon,
     ArrowDropDownOutlined,
-    AlbumOutlined,
 } from "@mui/icons-material";
 import FlexBetween from "./FlexBetween";
 import profileImage from "../assets/me.png";
@@ -22,7 +21,7 @@ import {
     ListItemIcon,
 } from "@mui/material";
 import { Logout, PersonAdd, Settings } from "@mui/icons-material";
-import NavBarAllUser from "./navbarTools/NavBarAllUser";
+
 
 const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
     const theme = useTheme();
