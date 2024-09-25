@@ -111,9 +111,6 @@ return (
                 </MenuItem>
                 <Divider />
                 <MenuItem onClick={handleClose}>
-                <ListItemIcon>
-                    <PersonAdd fontSize="small" />
-                </ListItemIcon>
                 </MenuItem>
                     <MenuItem onClick={handleClose}> {/* Logout TODO */}
                 <ListItemIcon>

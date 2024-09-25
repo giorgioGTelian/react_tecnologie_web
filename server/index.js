@@ -8,7 +8,7 @@ import User from './models/User.js';
 import jwt from 'jsonwebtoken';
 import helmet from 'helmet';
 import auth from './auth.js';
-
+import generalRoutes from './routes/general.js';
 
 //start a simple express server
 dotenv.config();
@@ -20,6 +20,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(helmet());
+
+/* routes */
+app.use("/general", generalRoutes);  
 
 //register endpoint
 app.post('/register', async (req, res) => {
