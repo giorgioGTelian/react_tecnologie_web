@@ -7,10 +7,6 @@ import bcrypt from 'bcrypt';
 import User from './models/User.js';
 import jwt from 'jsonwebtoken';
 import helmet from 'helmet';
-import authRoutes from './routes/authRoutes.js';
-//import './services/passport.js';
-import cookieSession from 'cookie-session';
-import passport from 'passport';
 import auth from './auth.js';
 
 
@@ -98,6 +94,119 @@ app.post('/login', async (req, res) => {
     }
 }
 );
+
+//save new event endpoint
+app.post('/save-event', auth, async (req, res) => {
+    const { title, start, end, allDay, location, rrule } = req.body;
+    try {
+        const user = await User.findOne({ _id: req.user._id });
+        if (!user) {
+            return res.status(404).send({
+                message: "utente non trovato",
+            });
+        }
+        user.events.push({
+            title,
+            start,
+            end,
+            allDay,
+            location,
+            rrule,
+        });
+        await user.save();
+        res.status(201).send({
+            message: "evento salvato con successo",
+            user,
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: "errore nel salvataggio evento",
+            error,
+        });
+    }  
+});
+
+// get all events endpoint for a specific user
+app.get('/get-events', auth, async (req, res) => {
+    try {
+        const user
+        = await User.findOne({ _id: req.user._id });
+        if (!user) {
+            return res.status(404).send({
+                message: "utente non trovato",
+            });
+        }
+        res.status(200).send({
+            message: "eventi trovati con successo",
+            events: user.events,
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: "errore nel recupero eventi",
+            error,
+        });
+    }
+});
+
+//logout endpoint
+app.post('/logout', (req, res) => {
+    res.status(200).send({
+        message: "logout effettuato con successo",
+    });
+});
+
+//save the notes for a specific user
+app.post('/save-notes', auth, async (req, res) => {
+    const { notes } = req.body;
+    try {
+        const user = await User.findOne({ _id: req.user._id });
+        if (!user) {
+            return res.status(404).send({
+                message: "utente non trovato",
+            });
+        }
+        user.notes = notes;
+        await user.save();
+        res.status(201).send({
+            message: "note salvate con successo",
+            user,
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: "errore nel salvataggio note",
+            error,
+        });
+    }
+});
+
+//update user endpoint
+app.put('/update-profile/:id', async (req, res) => {
+    const { id } = req.params;
+    const { birthdate, city, state, country, occupation, phoneNumber, notes } = req.body;
+
+    try {
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).send({ message: "User not found" });
+        }
+
+        // Update user fields
+        user.birthdate = birthdate || user.birthdate;
+        user.city = city || user.city;
+        user.state = state || user.state;
+        user.country = country || user.country;
+        user.occupation = occupation || user.occupation;
+        user.phoneNumber = phoneNumber || user.phoneNumber;
+        user.notes = notes || user.notes;
+
+        await user.save();
+
+        res.status(200).send({ message: "Profile updated successfully", user });
+    } catch (error) {
+        res.status(500).send({ message: "Error updating profile", error });
+    }
+});
 
 // authentication endpoint
 app.get("/auth-endpoint", auth, (req, res) => {

@@ -31,14 +31,35 @@ return (
 export default function SignUp() {
 
 
-const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-    email: data.get('email'),
-    password: data.get('password'),
-    });
-};
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+    
+        const userData = {
+            name: data.get('Nome'),
+            email: data.get('email'),
+            password: data.get('password'),
+        };
+    
+        try {
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
+    
+            if (response.ok) {
+                console.log('User registered successfully');
+                // Redirect to the profile update page
+            } else {
+                console.error('Error registering user');
+            }
+        } catch (error) {
+            console.error('Unexpected error:', error);
+        }
+    };
 
 return (
         <Container component="main" maxWidth="xs">
@@ -59,7 +80,7 @@ return (
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                 <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12}>
                     <TextField
                         autoComplete="given-name"
                         name="Nome"
