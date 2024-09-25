@@ -27,7 +27,7 @@ app.use(helmet());
 
 //register endpoint
 app.post('/register', async (req, res) => {
-    const { email, password, name, birthdate } = req.body;
+    const { email, password, name, birthdate, city, state, country, occupation, phoneNumber, notes, role, events } = req.body;
     try {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -36,6 +36,14 @@ app.post('/register', async (req, res) => {
             password: hashedPassword,
             name,
             birthdate,
+            city,
+            state,
+            country,
+            occupation,
+            phoneNumber,
+            notes,
+            role,    // Optional, will default to "admin" if not provided
+            events   
         });
         await user.save().then((result) => {
                 res.status(201).send({

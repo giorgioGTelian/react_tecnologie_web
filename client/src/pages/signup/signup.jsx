@@ -61,23 +61,13 @@ return (
                 <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                    autoComplete="given-name"
-                    name="Nome"
-                    required
-                    fullWidth
-                    id="firstName"
-                    label="Nome"
-                    autoFocus
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                    required
-                    fullWidth
-                    id="Cognome"
-                    label="Cognome"
-                    name="lastName"
-                    autoComplete="family-name"
+                        autoComplete="given-name"
+                        name="Nome"
+                        required
+                        fullWidth
+                        id="firstName"
+                        label="Nome"
+                        autoFocus
                     />
                 </Grid>
                 <Grid item xs={12}>

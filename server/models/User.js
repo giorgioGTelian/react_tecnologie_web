@@ -1,11 +1,19 @@
-//schema that defines the structure of the user data
+//schema that defines the structure of the user data and the events data
 import mongoose from 'mongoose';
-import passportLocalMongoose from 'passport-local-mongoose';
+
+const EventSchema = new mongoose.Schema({
+    title: String,
+    start: Date,
+    end: Date,
+    allDay: Boolean,
+    location: String,
+    rrule: {
+        freq: String,
+        until: Date
+    },
+});
 
 const UserSchema = new mongoose.Schema({
-    id: {
-        type: String,
-    }, 
     name: {
         type: String,
         required: [true, "ci serve un nome"],
@@ -35,15 +43,15 @@ const UserSchema = new mongoose.Schema({
     country: String,
     occupation: String,
     phoneNumber: String,
+    notes: String,
     role: {
         type: String,
         enum: ["user", "admin", "superadmin"],
         default: "admin",
     },
+    events: [EventSchema],
 }, { timestamps: true });
 
-// TODO plugin for passport-local-mongoose to handle password hashing using  bcrypt - TODO REMOVE PASSPORT
-// UserSchema.plugin(passportLocalMongoose);
 
 const User = mongoose.model("User", UserSchema);
 export default User;
