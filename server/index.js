@@ -65,10 +65,10 @@ app.post('/register', async (req, res) => {
 
 //login endpoint
 app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+    const { name, password } = req.body;
     try {
         const user = await
-        User.findOne({ email });
+        User.findOne({ name });
         if (!user) {
             return res.status(404).send({
                 message: "utente non trovato",
@@ -82,7 +82,7 @@ app.post('/login', async (req, res) => {
         }
         //create a token
         const token = jwt.sign({
-            _id: user._id, userEmail: user.email, 
+            _id: user._id, userName: user.Name, 
         }, process.env.TOKEN_SECRET, 
         { expiresIn: '24h' }
         );
