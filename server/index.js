@@ -7,10 +7,6 @@ import bcrypt from 'bcrypt';
 import User from './models/User.js';
 import jwt from 'jsonwebtoken';
 import helmet from 'helmet';
-import authRoutes from './routes/authRoutes.js';
-//import './services/passport.js';
-import cookieSession from 'cookie-session';
-import passport from 'passport';
 import auth from './auth.js';
 
 
@@ -27,7 +23,7 @@ app.use(helmet());
 
 //register endpoint
 app.post('/register', async (req, res) => {
-    const { email, password, name, birthdate } = req.body;
+    const { email, password, name, birthdate, city, state, country, occupation, phoneNumber, notes, role, events } = req.body;
     try {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -36,6 +32,14 @@ app.post('/register', async (req, res) => {
             password: hashedPassword,
             name,
             birthdate,
+            city,
+            state,
+            country,
+            occupation,
+            phoneNumber,
+            notes,
+            role,    // Optional, will default to "admin" if not provided
+            events   
         });
         await user.save().then((result) => {
                 res.status(201).send({
@@ -57,10 +61,10 @@ app.post('/register', async (req, res) => {
 
 //login endpoint
 app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+    const { name, password } = req.body;
     try {
         const user = await
-        User.findOne({ email });
+        User.findOne({ name });
         if (!user) {
             return res.status(404).send({
                 message: "utente non trovato",
@@ -74,7 +78,7 @@ app.post('/login', async (req, res) => {
         }
         //create a token
         const token = jwt.sign({
-            _id: user._id, userEmail: user.email, 
+            _id: user._id, userName: user.Name, 
         }, process.env.TOKEN_SECRET, 
         { expiresIn: '24h' }
         );
@@ -90,6 +94,119 @@ app.post('/login', async (req, res) => {
     }
 }
 );
+
+//save new event endpoint
+app.post('/save-event', auth, async (req, res) => {
+    const { title, start, end, allDay, location, rrule } = req.body;
+    try {
+        const user = await User.findOne({ _id: req.user._id });
+        if (!user) {
+            return res.status(404).send({
+                message: "utente non trovato",
+            });
+        }
+        user.events.push({
+            title,
+            start,
+            end,
+            allDay,
+            location,
+            rrule,
+        });
+        await user.save();
+        res.status(201).send({
+            message: "evento salvato con successo",
+            user,
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: "errore nel salvataggio evento",
+            error,
+        });
+    }  
+});
+
+// get all events endpoint for a specific user
+app.get('/get-events', auth, async (req, res) => {
+    try {
+        const user
+        = await User.findOne({ _id: req.user._id });
+        if (!user) {
+            return res.status(404).send({
+                message: "utente non trovato",
+            });
+        }
+        res.status(200).send({
+            message: "eventi trovati con successo",
+            events: user.events,
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: "errore nel recupero eventi",
+            error,
+        });
+    }
+});
+
+//logout endpoint
+app.post('/logout', (req, res) => {
+    res.status(200).send({
+        message: "logout effettuato con successo",
+    });
+});
+
+//save the notes for a specific user
+app.post('/save-notes', auth, async (req, res) => {
+    const { notes } = req.body;
+    try {
+        const user = await User.findOne({ _id: req.user._id });
+        if (!user) {
+            return res.status(404).send({
+                message: "utente non trovato",
+            });
+        }
+        user.notes = notes;
+        await user.save();
+        res.status(201).send({
+            message: "note salvate con successo",
+            user,
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: "errore nel salvataggio note",
+            error,
+        });
+    }
+});
+
+//update user endpoint
+app.put('/update-profile/:id', async (req, res) => {
+    const { id } = req.params;
+    const { birthdate, city, state, country, occupation, phoneNumber, notes } = req.body;
+
+    try {
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).send({ message: "User not found" });
+        }
+
+        // Update user fields
+        user.birthdate = birthdate || user.birthdate;
+        user.city = city || user.city;
+        user.state = state || user.state;
+        user.country = country || user.country;
+        user.occupation = occupation || user.occupation;
+        user.phoneNumber = phoneNumber || user.phoneNumber;
+        user.notes = notes || user.notes;
+
+        await user.save();
+
+        res.status(200).send({ message: "Profile updated successfully", user });
+    } catch (error) {
+        res.status(500).send({ message: "Error updating profile", error });
+    }
+});
 
 // authentication endpoint
 app.get("/auth-endpoint", auth, (req, res) => {

@@ -23,28 +23,3 @@ export const getAllUsers = async (req, res) => {
     }
 }
 
-export const createUser = async (req, res) => {
-    const user = req.body;
-    const newUser = new User(user);
-    try {
-        await newUser.save();
-        res.status(201).json(newUser);
-    }
-    catch (error) {
-        res.status(409).json({ message: error.message });
-    }
-}
-
-export const createGoogleUser = async (profileData) => {
-    //console.log(profileData);
-    try {
-        let user = await User.findOne({ id: profileData.id });
-        if (!user) {
-            user = new User(profileData);
-            await user.save();
-        }
-        return user;
-    } catch (error) {
-        throw new Error(error.message);
-    }
-}

@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import {
     Menu as MenuIcon,
     ArrowDropDownOutlined,
-    AlbumOutlined,
 } from "@mui/icons-material";
 import FlexBetween from "./FlexBetween";
 import profileImage from "../assets/me.png";
@@ -22,7 +21,7 @@ import {
     ListItemIcon,
 } from "@mui/material";
 import { Logout, PersonAdd, Settings } from "@mui/icons-material";
-import NavBarAllUser from "./navbarTools/NavBarAllUser";
+
 
 const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
     const theme = useTheme();
@@ -107,35 +106,16 @@ return (
             }}
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             >
-                <MenuItem component={Link} to="/profilo" >
-                <Avatar src={profileImage} /> {user.name}
-                </MenuItem>
-                <MenuItem component={Link} to="/aggiungi_account">
-                <Avatar /> account secondario
+                <MenuItem >
+                    <Avatar src={profileImage} /> {user.name}
                 </MenuItem>
                 <Divider />
                 <MenuItem onClick={handleClose}>
                 <ListItemIcon>
                     <PersonAdd fontSize="small" />
                 </ListItemIcon>
-                aggiungi un altro account
                 </MenuItem>
-                <MenuItem>
-                <NavBarAllUser />
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                <ListItemIcon>
-                    <Settings fontSize="small" />
-                </ListItemIcon>
-                Impostazioni
-                </MenuItem>
-                <MenuItem component={Link} to="/about">
-                <ListItemIcon>
-                    <AlbumOutlined fontSize="small" />
-                </ListItemIcon> 
-                Informazione Applicazione
-                </MenuItem>
-                <MenuItem onClick={handleClose}> {/* Logout TODO */}
+                    <MenuItem onClick={handleClose}> {/* Logout TODO */}
                 <ListItemIcon>
                     <Logout fontSize="small" />
                 </ListItemIcon>

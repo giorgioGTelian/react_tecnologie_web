@@ -33,18 +33,18 @@ return (
 
 export default function SignIn() {
     const navigate = useNavigate();
-    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [register, setRegister] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        const email = data.get('email');
+        const name = data.get('name');
         const password = data.get('password');
 
         console.log({
-            email: email,
+            name: name,
             password: password,
         });
 
@@ -53,7 +53,7 @@ export default function SignIn() {
         method: "post",
         url: "http://localhost:9000/login", //TODO: change this to your own server
         data: {
-            email,
+            name,
             password,
         },
     };
@@ -107,13 +107,13 @@ return (
                 margin="normal"
                 required
                 fullWidth
-                id="email"
-                label="Indirizzo Email"
-                name="email"
-                autoComplete="email"
+                id="name"
+                label="nome utente"
+                name="name"
+                autoComplete="name"
                 autoFocus
-                value={email} // added this
-                onChange={e => setEmail(e.target.value)}
+                value={name} // added this
+                onChange={e => setName(e.target.value)}
                 />
                 <TextField
                 margin="normal"
