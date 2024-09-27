@@ -10,6 +10,11 @@ import helmet from 'helmet';
 import auth from './auth.js';
 import generalRoutes from './routes/general.js';
 
+/******** data import *********/ 
+//import User from './models/User.js';
+//import { dataUser, dataStudent } from './data/index.js';
+/******************************/
+
 //start a simple express server
 dotenv.config();
 const app = express();
@@ -211,6 +216,28 @@ app.put('/update-profile/:id', async (req, res) => {
     }
 });
 
+app.get('/get-user/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const user
+        = await User.findById(id);
+        if (!user) {
+            return res.status(404).send({
+                message: "utente non trovato",
+            });
+        }
+        res.status(200).send({
+            message: "utente trovato con successo",
+            user,
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: "errore nel recupero utente",
+            error,
+        });
+    }
+});
+
 // authentication endpoint
 app.get("/auth-endpoint", auth, (req, res) => {
     res.json({ message: "You are authorized to access me" });
@@ -236,6 +263,7 @@ mongoose.connect(process.env.MONGO_URL)
     console.log('Connection to MongoDB successful');
 
     /* ONLY ADD DATA ONE TIME - this is the initial data injection from data/index.js */
+     //User.insertMany(dataUser); 
     
 })
 .catch((error) => console.log(`${error} did not connect`));

@@ -43,15 +43,10 @@ export default function SignIn() {
         const name = data.get('name');
         const password = data.get('password');
 
-        console.log({
-            name: name,
-            password: password,
-        });
-
         // set configurations
     const configuration = {
         method: "post",
-        url: "http://localhost:9000/login", //TODO: change this to your own server
+        url: "http://localhost:9000/login", 
         data: {
             name,
             password,

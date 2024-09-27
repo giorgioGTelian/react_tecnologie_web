@@ -20,7 +20,7 @@ import {
     Divider,
     ListItemIcon,
 } from "@mui/material";
-import { Logout, PersonAdd, Settings } from "@mui/icons-material";
+import { Logout } from "@mui/icons-material";
 
 
 const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
@@ -30,6 +30,7 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
     const isOpen = Boolean(anchorEl);
     const handleClick = (event) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
+
     
 return (
     <AppBar
@@ -49,9 +50,6 @@ return (
 
         {/* RIGHT SIDE */}
         <FlexBetween gap="1.5rem">
-
-
-
         <FlexBetween >
             <Button
             onClick={handleClick}
@@ -116,7 +114,7 @@ return (
                 <ListItemIcon>
                     <Logout fontSize="small" />
                 </ListItemIcon>
-                esci
+                    <Link to="/">Logout</Link>
                 </MenuItem>
             </Menu>
         </FlexBetween>
