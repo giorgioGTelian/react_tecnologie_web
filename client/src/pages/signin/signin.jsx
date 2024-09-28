@@ -107,7 +107,7 @@ return (
                 name="name"
                 autoComplete="name"
                 autoFocus
-                value={name} // added this
+                value={name} 
                 onChange={e => setName(e.target.value)}
                 />
                 <TextField
@@ -119,7 +119,7 @@ return (
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                value={password} // added this
+                value={password} 
                 onChange={e => setPassword(e.target.value)} 
                 />
                 <FormControlLabel

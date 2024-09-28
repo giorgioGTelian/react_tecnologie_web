@@ -11,6 +11,9 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import axios from 'axios';
 
 
 function Copyright(props) {
@@ -29,35 +32,39 @@ return (
 
 
 export default function SignUp() {
-
+    const navigate = useNavigate();
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [register, setRegister] = useState(false);
+    
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
+        const name = data.get('name');
+        const email = data.get('email');
+        const password = data.get('password');
     
-        const userData = {
-            name: data.get('Nome'),
-            email: data.get('email'),
-            password: data.get('password'),
+        // set configurations
+        const configuration = {
+            method: "post",
+            url: "http://localhost:9000/register-user", 
+            data: {
+                name,
+                email,
+                password,
+            },
         };
-    
+
+        // make the API call
         try {
-            const response = await fetch('/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData),
-            });
-    
-            if (response.ok) {
-                console.log('User registered successfully');
-                // Redirect to the profile update page
-            } else {
-                console.error('Error registering user');
-            }
+            const response = await axios(configuration);
+            console.log('Success:', response);
+            setRegister(true);
+            navigate('/');
         } catch (error) {
-            console.error('Unexpected error:', error);
+            console.error('Error:', error);
         }
     };
 
@@ -82,13 +89,15 @@ return (
                 <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <TextField
-                        autoComplete="given-name"
-                        name="Nome"
+                        autoComplete="name"
+                        name="name"
                         required
                         fullWidth
-                        id="firstName"
+                        id="name"
                         label="Nome"
                         autoFocus
+                        value={name}
+                        onChange={e => setName(e.target.value)}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -99,6 +108,8 @@ return (
                     label="Email"
                     name="email"
                     autoComplete="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -110,6 +121,8 @@ return (
                     type="password"
                     id="password"
                     autoComplete="new-password"
+                    value={password} 
+                    onChange={e => setPassword(e.target.value)} 
                     />
                 </Grid>
                 <Grid item xs={12}>

@@ -238,6 +238,36 @@ app.get('/get-user/:id', async (req, res) => {
     }
 });
 
+//register new use only by name email and password
+app.post('/register-user', async (req, res) => {
+    const { email, password, name } = req.body;
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        const user = new User({
+            email,
+            password: hashedPassword,
+            name,
+        });
+        await user.save().then((result) => {
+                res.status(201).send({
+                message: "user creato con successo ",
+                result,
+                user,
+                });
+            })
+            .catch((error) => {
+                res.status(500).send({
+                message: "errore nella creazione utente",
+                error,
+                });
+            });
+    } catch (error) {
+        res.status(500).json({ message: "ci sono stati errori nella richiesta di registrazione", error });
+    }
+}
+);
+
 // authentication endpoint
 app.get("/auth-endpoint", auth, (req, res) => {
     res.json({ message: "You are authorized to access me" });
