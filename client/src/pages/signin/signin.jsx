@@ -57,6 +57,13 @@ export default function SignIn() {
     try {
         const response = await axios(configuration);
         console.log('Success:', response);
+
+        const { token } = response.data; // Assuming the token is in the response
+
+        // Store the token in localStorage
+        localStorage.setItem('token', token);
+
+        console.log('Token stored successfully');
         setRegister(true);
         navigate('/about'); 
     } catch (error) {
