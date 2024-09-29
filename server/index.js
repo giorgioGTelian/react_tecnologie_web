@@ -187,75 +187,46 @@ app.post('/save-notes', auth, async (req, res) => {
     }
 });
 
-//update user endpoint
-app.put('/update-profile/:id', async (req, res) => {
-    const { id } = req.params;
-    const { birthdate, city, state, country, occupation, phoneNumber, notes } = req.body;
-
+app.get('/get-user', auth, async (req, res) => {
     try {
-        const user = await User.findById(id);
-
+        const user = await User.findOne({ _id: req.user._id }); 
         if (!user) {
-            return res.status(404).send({ message: "User not found" });
+            return res.status(404).send({
+                message: "utente non trovato",
+            });
         }
-
-        // Update user fields
-        user.birthdate = birthdate || user.birthdate;
-        user.city = city || user.city;
-        user.state = state || user.state;
-        user.country = country || user.country;
-        user.occupation = occupation || user.occupation;
-        user.phoneNumber = phoneNumber || user.phoneNumber;
-        user.notes = notes || user.notes;
-
-        await user.save();
-
-        res.status(200).send({ message: "Profile updated successfully", user });
+        res.status(200).send({
+            message: "utente trovato con successo",
+            user,
+        });
     } catch (error) {
-        res.status(500).send({ message: "Error updating profile", error });
+        res.status(500).send({
+            message: "errore nel recupero utente",
+            error,
+        });
     }
 });
 
-//get user by id endpoint using token JWT
-app.get('/get-user', auth, async (req, res) => {
+// Endpoint to update the user profile
+app.put('/update-profile/:userId', auth, async (req, res) => {
     try {
-        const user = await User.findById(req.user._id);
-        if (!user) {
-            return res.status(404).send({
-                message: "utente non trovato",
-            });
-        }
-        res.status(200).send({
-            message: "utente trovato con successo",
-            user,
-        });
-    } catch (error) {
-        res.status(500).send({
-            message: "errore nel recupero utente",
-            error,
-        });
-    }
-}
-);
+        const { userId } = req.params;
 
-app.get('/get-user/:id', async (req, res) => {
-    const { id } = req.params;
-    try {
-        const user
-        = await User.findById(id);
-        if (!user) {
-            return res.status(404).send({
-                message: "utente non trovato",
-            });
+        // Assume you have a User model and mongoose/mongoDB
+        const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true });
+
+        if (!updatedUser) {
+            return res.status(404).send({ message: "User not found" });
         }
+
         res.status(200).send({
-            message: "utente trovato con successo",
-            user,
+            message: "Profile updated successfully",
+            user: updatedUser,
         });
     } catch (error) {
         res.status(500).send({
-            message: "errore nel recupero utente",
-            error,
+            message: "Error updating profile",
+            error: error.message,
         });
     }
 });

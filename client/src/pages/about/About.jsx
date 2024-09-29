@@ -4,14 +4,15 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
 const About = () => {
+    const [updateStatus, setUpdateStatus] = useState('');
     const [labels, setLabels] = useState({
-        birthdate: 'Birthdate',
-        city: 'City',
-        state: 'State',
-        country: 'Country',
-        occupation: 'Occupation',
-        phoneNumber: 'Phone Number',
-        notes: 'Notes'
+        name: '',
+        birthdate: '',
+        city: '',
+        state: '',
+        country: '',
+        occupation: '',
+        phoneNumber: ''
     });
 
     useEffect(() => {
@@ -23,31 +24,25 @@ const About = () => {
                     console.error('No token found');
                     return;
                 }
-
-                // Decode the JWT to get the user ID
-                const decodedToken = jwtDecode(token);
-                const userId = decodedToken.userId; // Adjust this based on your token structure
-                console.log('User ID:', userId);
-                console.log('Token:', token);
-                console.log('Decoded Token:', decodedToken);
-
-                // Fetch the user data from the backend
-                const response = await axios.get(`/user-profile/${userId}`, {
+    
+                // Fetch the user data from the backend using the token
+                const response = await axios.get(`http://localhost:9000/get-user`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-
+    
                 if (response.status === 200) {
-                    const userData = response.data;
+                    const userData = response.data.user; // Accessing user from the response
+                    
                     setLabels({
-                        birthdate: userData.birthdateLabel || 'Birthdate',
-                        city: userData.cityLabel || 'City',
-                        state: userData.stateLabel || 'State',
-                        country: userData.countryLabel || 'Country',
-                        occupation: userData.occupationLabel || 'Occupation',
-                        phoneNumber: userData.phoneNumberLabel || 'Phone Number',
-                        notes: userData.notesLabel || 'Notes'
+                        name: userData.name,
+                        birthdate: userData.birthdate|| 'Data di nascita da inserire',
+                        city: userData.city || 'Città da inserire',
+                        state: userData.state || 'Stato da inserire',
+                        country: userData.country || 'Nazionalità da inserire',
+                        occupation: userData.occupation || 'Impiego da inserire',
+                        phoneNumber: userData.phoneNumber || 'Numero di telefono da inserire'
                     });
                 } else {
                     console.error('Error fetching user data');
@@ -56,15 +51,17 @@ const About = () => {
                 console.error('Unexpected error:', error);
             }
         };
-
+    
         fetchLabels();
     }, []);
+    
 
-    const handleProfileUpdate = async (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
 
-        const updatedData = {
+const handleProfileUpdate = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    const updatedData = {
             birthdate: data.get('birthdate'),
             city: data.get('city'),
             state: data.get('state'),
@@ -72,37 +69,38 @@ const About = () => {
             occupation: data.get('occupation'),
             phoneNumber: data.get('phoneNumber'),
             notes: data.get('notes'),
-        };
-
-        // Retrieve the JWT from local storage
-        const token = localStorage.getItem('token');
-        if (!token) {
-            console.error('No token found');
-            return;
-        }
-
-        // Decode the JWT to get the user ID
-        const decodedToken = jwtDecode(token);
-        const userId = decodedToken.userId; 
-
-        try {
-            const response = await axios.put(`/update-profile/${userId}`, updatedData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-            });
-
-            if (response.status === 200) {
-                console.log('Profile updated successfully');
-                // Handle success (e.g., redirect to profile page)
-            } else {
-                console.error('Error updating profile');
-            }
-        } catch (error) {
-            console.error('Unexpected error:', error);
-        }
     };
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+        console.error('No token found');
+        setUpdateStatus('No token found');
+        return;
+    }
+
+    const decodedToken = jwtDecode(token);
+    const userId = decodedToken._id; 
+
+    try {
+        const response = await axios.put(`http://localhost:9000/update-profile/${userId}`, updatedData, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        if (response.status === 200) {
+            console.log('Profile updated successfully');
+            setUpdateStatus('Profile updated successfully');
+        } else {
+            console.error('Error updating profile');
+            setUpdateStatus('Error updating profile');
+        }
+    } catch (error) {
+        console.error('Unexpected error:', error);
+        setUpdateStatus('Unexpected error occurred');
+    }
+};
     
     return (
         <>
@@ -115,32 +113,35 @@ const About = () => {
                 alignItems: 'center',
             }}
             >
-        <Typography component="h1" variant="h5">Update Profile</Typography>
+        <Typography component="h1" variant="h5">Aggiorna Profilo di {labels.name}</Typography>
                 <Box component="form" noValidate onSubmit={handleProfileUpdate} sx={{ mt: 3 }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={4}>
+                        <Typography>Data di nascita</Typography>
                             <TextField fullWidth autoFocus name="birthdate" label={labels.birthdate} type="date" InputLabelProps={{ shrink: true }} />
                         </Grid>
                         <Grid item xs={12} sm={4}>
+                            <Typography>Città</Typography>
                             <TextField name="city" label={labels.city} fullWidth />
                         </Grid>
                         <Grid item xs={12} sm={4}>
+                        <Typography>Stato</Typography>
                             <TextField name="state" label={labels.state} fullWidth />
                         </Grid>
-                        <Grid item xs={12} sm={3}>
+                        <Grid item xs={12} sm={4}>
+                            <Typography>Nazionalità</Typography>
                             <TextField name="country" label={labels.country} />
                         </Grid>
-                        <Grid item xs={12} sm={3}>
+                        <Grid item xs={12} sm={4}>
+                            <Typography>Impiego</Typography>
                             <TextField name="occupation" label={labels.occupation} />
                         </Grid>
-                        <Grid item xs={12} sm={3}>
+                        <Grid item xs={12} sm={4}>
+                            <Typography>Numero di telefono</Typography>
                             <TextField name="phoneNumber" label={labels.phoneNumber} />
                         </Grid>
-                        <Grid item xs={12} sm={3}>
-                            <TextField name="notes" label={labels.notes} multiline />
-                        </Grid>
                         <Box sx={{ justifyContent: 'center' }}>
-                            <Button type="submit" variant="contained" color="primary" sx={{ mt: 3, mb: 2 }}>Update Profile</Button>
+                            <Button type="submit" variant="contained" color="primary" sx={{ mt: 3, mb: 2 }}>Aggiorna Profilo</Button>
                         </Box>
                     </Grid>
                 </Box>
