@@ -104,13 +104,7 @@ return (
             }}
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             >
-                <MenuItem >
-                    <Avatar src={profileImage} /> {user.name}
-                </MenuItem>
-                <Divider />
                 <MenuItem onClick={handleClose}>
-                </MenuItem>
-                    <MenuItem onClick={handleClose}> {/* Logout TODO */}
                 <ListItemIcon>
                     <Logout fontSize="small" />
                 </ListItemIcon>
