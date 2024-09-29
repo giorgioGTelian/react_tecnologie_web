@@ -17,7 +17,6 @@ import {
     MenuItem,
     useTheme,
     Avatar,
-    Divider,
     ListItemIcon,
 } from "@mui/material";
 import { Logout } from "@mui/icons-material";
