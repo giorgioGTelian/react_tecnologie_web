@@ -27,6 +27,9 @@ const About = () => {
                 // Decode the JWT to get the user ID
                 const decodedToken = jwtDecode(token);
                 const userId = decodedToken.userId; // Adjust this based on your token structure
+                console.log('User ID:', userId);
+                console.log('Token:', token);
+                console.log('Decoded Token:', decodedToken);
 
                 // Fetch the user data from the backend
                 const response = await axios.get(`/user-profile/${userId}`, {

@@ -216,6 +216,28 @@ app.put('/update-profile/:id', async (req, res) => {
     }
 });
 
+//get user by id endpoint using token JWT
+app.get('/get-user', auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).send({
+                message: "utente non trovato",
+            });
+        }
+        res.status(200).send({
+            message: "utente trovato con successo",
+            user,
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: "errore nel recupero utente",
+            error,
+        });
+    }
+}
+);
+
 app.get('/get-user/:id', async (req, res) => {
     const { id } = req.params;
     try {
