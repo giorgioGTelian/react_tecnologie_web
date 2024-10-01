@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import { formatDate } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -14,14 +14,11 @@ import {
     ListItemText,
     Typography,
     } from "@mui/material";
+import axios from "axios";
 
 
     const Calendar = () => {
     const [currentEvents, setCurrentEvents] = useState([]);
-
-
-  
-
     // Mappa le frequenze inserite dall'utente ai valori supportati da rrule
     const mapFrequency = (frequency) => {
         switch (frequency.toLowerCase()) {
@@ -38,39 +35,51 @@ import {
         }
     };
 
-    const handleDateClick = (selected) => {
-        const title = prompt("Inserisci il titolo dell'evento");
-        const location = prompt("Inserisci la location dell'evento");
-        const isAllDay = window.confirm("È un evento che dura tutto il giorno?");
-        const repeatFrequency = prompt(
-        "Inserisci la frequenza di ripetizione (nessuna, giornaliera, settimanale, mensile):",
-        "nessuna"
-        );
-        const rruleFreq = mapFrequency(repeatFrequency); // Mappa la frequenza
-        const repeatUntil = rruleFreq ? prompt("Inserisci la data di fine ripetizione (formato YYYY-MM-DD)") : null;
+    
+const handleDateClick = async (selected) => {
+    const title = prompt("Inserisci il titolo dell'evento");
+    const location = prompt("Inserisci la location dell'evento");
+    const isAllDay = window.confirm("È un evento che dura tutto il giorno?");
+    const repeatFrequency = prompt("Inserisci la frequenza di ripetizione (nessuna, giornaliera, settimanale, mensile):", "nessuna");
+    const rruleFreq = mapFrequency(repeatFrequency);
+    const repeatUntil = rruleFreq ? prompt("Inserisci la data di fine ripetizione (formato YYYY-MM-DD)") : null;
 
-        const calendarApi = selected.view.calendar;
-        calendarApi.unselect();
+    const calendarApi = selected.view.calendar;
+    calendarApi.unselect();
 
-        if (title) {
+    if (title) {
         const newEvent = {
-            id: `${selected.dateStr}-${title}`,
             title,
             start: selected.startStr,
             end: selected.endStr,
             allDay: isAllDay,
             location,
             rrule: rruleFreq
-            ? {
-                freq: rruleFreq, // Usa la frequenza mappata
-                until: repeatUntil,
-            }
-            : null,
+                ? {
+                    freq: rruleFreq,
+                    until: repeatUntil,
+                }
+                : null,
         };
 
-        calendarApi.addEvent(newEvent);
+        try {
+            const token = localStorage.getItem('token'); // Get the token from localStorage
+            const response = await axios.post('http://localhost:9000/save-event', newEvent, {
+                headers: {
+                    'Authorization': `Bearer ${token}` // Include token in headers
+                }
+            });
+            console.log("Evento salvato con successo", response.data);
+            calendarApi.addEvent({
+                id: `${selected.dateStr}-${title}`,
+                ...newEvent,
+            });
+        } catch (error) {
+            console.error("Errore nel salvataggio dell'evento", error);
         }
-    };
+    }
+};
+    
 
     const handleEventClick = (selected) => {
         if (
@@ -81,6 +90,25 @@ import {
         selected.event.remove();
         }
     };
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
+                const response = await axios.get('http://localhost:9000/get-events', {
+                    headers: {
+                        'Authorization': `Bearer ${token}` // Include the token in the request header
+                    }
+                });
+                setCurrentEvents(response.data.events);
+            } catch (error) {
+                console.error("Errore durante il recupero degli eventi", error);
+            }
+        };
+    
+        fetchEvents();
+    }, []);
+    
 
     return (
         <Box m="20px">
@@ -129,7 +157,7 @@ import {
                     timeGridPlugin,
                     interactionPlugin,
                     listPlugin,
-                    rrulePlugin, // Plugin per gestire le ricorrenze
+                    rrulePlugin,
                 ]}
                 headerToolbar={{
                     left: "prev,next today",
@@ -143,35 +171,14 @@ import {
                 dayMaxEvents={true}
                 select={handleDateClick}
                 eventClick={handleEventClick}
-                eventsSet={(events) => setCurrentEvents(events)}
-                initialEvents={[
-                {
-                    id: "12315",
-                    title: "Evento giornaliero",
-                    start: "2024-09-14",
-                    allDay: true,
-                    rrule: {
-                    freq: "DAILY",
-                    until: "2024-09-20",
-                    },
-                    extendedProps: {
-                    location: "Office",
-                    },
-                },
-                {
-                    id: "5123",
-                    title: "Evento settimanale",
-                    start: "2024-09-28T10:00:00",
-                    rrule: {
-                    freq: "WEEKLY",
-                    until: "2024-11-30",
-                    },
-                    extendedProps: {
-                    location: "Online",
-                    },
-                },
-                ]}
-            />
+                eventsSet={(events) => {
+                    // Avoid updating state if the events haven't changed
+                    if (events.length !== currentEvents.length) {
+                        setCurrentEvents(events);
+                    }
+                }}
+                events={currentEvents} // Use the fetched events here
+                />
             </Box>
         </Box>
         </Box>
