@@ -112,7 +112,7 @@ const handleDateClick = async (selected) => {
 
     return (
         <Box m="20px">
-        <h1>Calendar</h1>
+        <Typography variant="h3">Calendario</Typography>
 
         <Box display="flex" justifyContent="space-between">
             {/* CALENDAR SIDEBAR */}
