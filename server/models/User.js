@@ -36,7 +36,6 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
         min: "1900-01-01",
-        max: "2021-12-31",
     },
     city: String,
     state: String,

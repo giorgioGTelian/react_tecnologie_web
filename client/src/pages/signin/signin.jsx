@@ -43,15 +43,10 @@ export default function SignIn() {
         const name = data.get('name');
         const password = data.get('password');
 
-        console.log({
-            name: name,
-            password: password,
-        });
-
         // set configurations
     const configuration = {
         method: "post",
-        url: "http://localhost:9000/login", //TODO: change this to your own server
+        url: "http://localhost:9000/login", 
         data: {
             name,
             password,
@@ -62,6 +57,13 @@ export default function SignIn() {
     try {
         const response = await axios(configuration);
         console.log('Success:', response);
+
+        const { token } = response.data; // Assuming the token is in the response
+
+        // Store the token in localStorage
+        localStorage.setItem('token', token);
+
+        console.log('Token stored successfully');
         setRegister(true);
         navigate('/about'); 
     } catch (error) {
@@ -112,7 +114,7 @@ return (
                 name="name"
                 autoComplete="name"
                 autoFocus
-                value={name} // added this
+                value={name} 
                 onChange={e => setName(e.target.value)}
                 />
                 <TextField
@@ -124,7 +126,7 @@ return (
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                value={password} // added this
+                value={password} 
                 onChange={e => setPassword(e.target.value)} 
                 />
                 <FormControlLabel
