@@ -22,10 +22,10 @@ const Label = ({ children }) => (
 );
 
 export default function Settings() {
-  const history = useNavigate();
+  const navigate = useNavigate();
   const back = (e) => {
     e.stopPropagation();
-    history.goBack();
+    navigate(-1);
   };
 
   const {
