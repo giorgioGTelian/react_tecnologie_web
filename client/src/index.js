@@ -7,7 +7,7 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
-import { api } from './state/api';
+
 import globalReducer from './state';
 import timerReducer from "./state/timerSlice";
 
@@ -16,10 +16,9 @@ const store = configureStore({
   reducer: {
     global: globalReducer,
     timer: timerReducer,
-    [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware),
+    getDefaultMiddleware().concat(),
 });
 setupListeners(store.dispatch);
 
