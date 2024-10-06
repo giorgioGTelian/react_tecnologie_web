@@ -1,13 +1,13 @@
 const POMODORO = "pomodoro";
 const SHORT_BREAK = "short_break";
 const LONG_BREAK = "long_break";
-const PAUSED = "paused";
-const TIME_FOR_A_BREAK = "Time for a break!";
-const TIME_TO_FOCUS = "Time to focus!";
+const PAUSED = "Pausa";
+const TIME_FOR_A_BREAK = "Pausa!";
+const TIME_TO_FOCUS = "Concentrati!";
 const STOP = "Stop";
-const START = "Start";
+const START = "Vai";
 const CONFIRM =
-  "Are you sure you want to finish the round early? (The remaining time will not be counted in the report.)";
+  "Sicuro di voler finire prima? Il timer verrà resettato e non potrai riprendere.";
 
 const BELL_SOUND = "sounds/alarm-bell.mp3";
 const DIGITAL_SOUND = "sounds/alarm-digital.mp3";

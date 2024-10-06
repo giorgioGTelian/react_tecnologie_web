@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import Layout from './pages/layout';
 import Pomodoro from './pages/pomodoro/Pomodoro';
 import Calendar from './pages/calendar/calendar';
-import Editor from './pages/editor/Editor';
 import NotFound from './pages/NotFound';
 import About from './pages/about/About';
 import SignIn from './pages/signin/signin';
@@ -26,7 +25,6 @@ function App() {
               <Route path="/" element={<Navigate to="/calendar" />} />
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/pomodoro" element={<Pomodoro />} />
-              <Route path="/editor" element={<Editor />} />
               <Route path="/about" element={<About />} /> 
               <Route path="*" element={<NotFound />} /> 
               <Route path="/editorMain" element={<EditorMain />} />

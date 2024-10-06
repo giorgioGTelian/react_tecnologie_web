@@ -8,7 +8,7 @@ import User from './models/User.js';
 import jwt from 'jsonwebtoken';
 import helmet from 'helmet';
 import auth from './auth.js';
-import generalRoutes from './routes/general.js';
+
 
 /******** data import *********/ 
 //import User from './models/User.js';
@@ -26,8 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(helmet());
 
-/* routes */
-app.use("/general", generalRoutes);  
+
 
 //register endpoint
 app.post('/register', async (req, res) => {
@@ -163,30 +162,7 @@ app.post('/logout', (req, res) => {
     });
 });
 
-//save the notes for a specific user
-app.post('/save-notes', auth, async (req, res) => {
-    const { notes } = req.body;
-    try {
-        const user = await User.findOne({ _id: req.user._id });
-        if (!user) {
-            return res.status(404).send({
-                message: "utente non trovato",
-            });
-        }
-        user.notes = notes;
-        await user.save();
-        res.status(201).send({
-            message: "note salvate con successo",
-            user,
-        });
-    } catch (error) {
-        res.status(500).send({
-            message: "errore nel salvataggio note",
-            error,
-        });
-    }
-});
-
+//get user endpoint
 app.get('/get-user', auth, async (req, res) => {
     try {
         const user = await User.findOne({ _id: req.user._id }); 
@@ -262,14 +238,14 @@ app.post('/register-user', async (req, res) => {
 );
 
 // authentication endpoint
-app.get("/auth-endpoint", auth, (req, res) => {
+/* app.get("/auth-endpoint", auth, (req, res) => {
     res.json({ message: "You are authorized to access me" });
 });
-
+ */
 // free endpoint
-app.get("/free-endpoint", (req, res) => {
+/* app.get("/free-endpoint", (req, res) => {
     res.json({ message: "You are free to access me anytime" });
-});
+}); */
 
 /* //start the server at PORT
 app.listen(PORT, () => {

@@ -74,7 +74,7 @@ export default function Header() {
         >
           <Box component="li">
             <Link to="/settings">
-              <CustomButton icon="settings">Setting</CustomButton>
+              <CustomButton icon="settings">Impostazioni</CustomButton>
             </Link>
           </Box>
         </Box>
