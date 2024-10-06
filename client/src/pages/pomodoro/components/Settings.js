@@ -39,10 +39,10 @@ export default function Settings() {
   return (
     <Modal>
       <Box component="section" sx={{ p: 2 }}>
-          <Typography variant="h2">Timer Settings</Typography>
+          <Typography variant="h2">Impostazioni Timer</Typography>
           <div>
             <Item col>
-              <Label>Time (minutes)</Label>
+              <Label>Tempo in minuti</Label>
               <div >
                 {Object.values(modes).map(({ id, label, time }) => (
                   <Input
@@ -61,7 +61,7 @@ export default function Settings() {
               </div>
             </Item>
             <Box component="section" >
-            <Typography variant="h6">Auto start Breaks?</Typography>
+            <Typography variant="h6">le pause si auto attivano?</Typography>
               <ToggleButton
                 value="check"
                 on={autoBreaks}
@@ -71,7 +71,7 @@ export default function Settings() {
               </ToggleButton>
             </Box>
             <Box component="section">
-            <Typography variant="h6">Auto start Pomodoros?</Typography>
+            <Typography variant="h6">Pomodoro si autoattiva?</Typography>
               <ToggleButton
                 value="check"
                 on={autoPomodoros}
@@ -81,7 +81,7 @@ export default function Settings() {
               </ToggleButton>
             </Box>
             <Box component="section">
-            <Typography variant="h6">Long Break interval</Typography>
+            <Typography variant="h6">intervallo lungo</Typography>
               <Input
                 min={1}
                 type="number"
