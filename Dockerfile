@@ -30,7 +30,7 @@ COPY --from=server-build /app/server ./
 COPY --from=client-build /app/client/build ./public
 
 # Expose the port the server will run on
-EXPOSE 3000
+EXPOSE 9000
 
 # Start the server
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
