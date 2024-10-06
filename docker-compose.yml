@@ -23,6 +23,6 @@ services:
       - ./server:/app/server
     command: npm run dev
     ports:
-      - "5000:5000"
+      - "9000:9000"
     environment:
       - NODE_ENV=development
